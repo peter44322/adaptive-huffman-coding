@@ -24,7 +24,7 @@ public class AdaptiveHuffman {
                     if (tree.isEmpty()){
                         tree.append(character);
                         tree.traverseOrder(tree.root);
-                        System.out.println();
+                        System.out.println("character : "+character );
                         return String.valueOf(shortCodeTable.get(character));
                     }
 
@@ -34,13 +34,13 @@ public class AdaptiveHuffman {
                         String result = NYT.code.toString() + shortCodeTable.get(character);
                         tree.updateWith(character);
                         tree.traverseOrder(tree.root);
-                        System.out.println();
+                        System.out.println("character : "+character);
                         return result;
                     }else {
                         String result = targetNode.code.toString();
                         tree.updateWith(character);
                         tree.traverseOrder(tree.root);
-                        System.out.println();
+                        System.out.println("character : "+character);
                         return result;
                     }
                 })
