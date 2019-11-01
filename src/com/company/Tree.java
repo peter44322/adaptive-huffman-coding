@@ -13,24 +13,19 @@ public class Tree {
 
     public void append(char character) {
         Node previousNYT = this.getNyt(root);
+        Node targetNode = new Node(character);
         if (previousNYT == null){
-            root.setRight(new Node(character));
+            root.setRight(targetNode);
             root.setLeft(new Node(true));
         }
         else {
             previousNYT.clear();
-            previousNYT.setRight(new Node(character));
+            previousNYT.setRight(targetNode);
             previousNYT.setLeft(new Node(true));
-//            while (!previousNYT.isRoot()){
-//                Node parent = previousNYT.parent;
-//                forEach(root, parent::trySwapWith);
-//                previousNYT = parent;
-//            }
-
         }
         this.codeTheTree(root,"");
         this.setTheTreeNumbers(root,root.number);
-//        this.setTheTreeCounters(root);
+        incrementNodeCount(targetNode);
     }
 
     public Node getNyt(Node node){
@@ -41,7 +36,7 @@ public class Tree {
         if (node.hasLeft()){
             result = getNyt(node.getLeft());
         }
-        if (node.hasRight() && result == null){
+        if (result == null && node.hasRight()){
             result = getNyt(node.getRight());
         }
         return result;
@@ -94,18 +89,6 @@ public class Tree {
         }
     }
 
-//    private int setTheTreeCounters(Node node){
-//        int count = 0;
-//        if (node.hasLeft()){
-//            count += setTheTreeCounters(node.getLeft());
-//        }
-//        if (node.hasRight()){
-//            count += setTheTreeCounters(node.getRight());
-//        }
-//        node.count = count == 0 ? node.count : count;
-//        return node.count;
-//    }
-
     private void setTheTreeNumbers(Node node, int number){
         if (node.hasRight()){
             node.getRight().number = number - 1 ;
@@ -118,13 +101,17 @@ public class Tree {
     }
 
     void incrementNodeCount(Node targetNode) {
-        while (!isRoot(targetNode)){
-            Node finalTargetNode = targetNode;
-            forEach(root, n -> finalTargetNode.trySwapWith(n,this::isParent));
+        do {
+            trySwap(targetNode);
+            this.codeTheTree(root,"");
             targetNode.incrementCount();
-            finalTargetNode.copy(targetNode);
-            targetNode = parent(root,finalTargetNode);
-        }
+            targetNode = parent(root,targetNode);
+        }while (!isRoot(targetNode));
+        root.incrementCount();
+    }
+
+    void trySwap(Node that){
+        forEach(root,node -> that.trySwapWith(node,this::isParent));
     }
 
     void forEach(Node node,ForEach forEach){
@@ -159,7 +146,7 @@ public class Tree {
                 parent = parent(node.getLeft(),target);
             }
         }
-        if (node.hasRight() && parent == null){
+        if (parent == null && node.hasRight() ){
             if (node.getRight().number == target.number){
                 parent = node;
             }else {

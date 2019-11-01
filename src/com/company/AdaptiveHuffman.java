@@ -23,6 +23,8 @@ public class AdaptiveHuffman {
                     char character = c.charAt(0);
                     if (tree.isEmpty()){
                         tree.append(character);
+                        tree.traverseOrder(tree.root);
+                        System.out.println();
                         return String.valueOf(shortCodeTable.get(character));
                     }
 
@@ -31,15 +33,19 @@ public class AdaptiveHuffman {
                         Node NYT = tree.getNyt(tree.root);
                         String result = NYT.code.toString() + shortCodeTable.get(character);
                         tree.updateWith(character);
+                        tree.traverseOrder(tree.root);
+                        System.out.println();
                         return result;
                     }else {
                         String result = targetNode.code.toString();
                         tree.updateWith(character);
+                        tree.traverseOrder(tree.root);
+                        System.out.println();
                         return result;
                     }
                 })
                 .collect(Collectors.joining(" "));
-        tree.traverseOrder(tree.root);
+//        tree.traverseOrder(tree.root);
 //        System.out.println(tree.get(tree.root,'A'));
         return compressedText;
     }

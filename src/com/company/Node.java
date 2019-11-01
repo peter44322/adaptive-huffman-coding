@@ -25,7 +25,7 @@ public class Node implements Cloneable{
 
     public Node(char symbol) {
         this.symbol = symbol;
-        this.count = 1;
+        this.count = 0;
     }
 
     public Node(char symbol, Binary code, int number, int count) {
@@ -71,7 +71,7 @@ public class Node implements Cloneable{
     void clear() {
         this.symbol = '*';
         this.isNYT = false;
-        this.count = 1;
+//        this.count = 1;
     }
 
     void incrementCount() {
