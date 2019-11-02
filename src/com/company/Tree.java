@@ -104,7 +104,7 @@ class Tree {
     }
 
     private boolean isRoot(Node node) {
-        return node.code == root.code;
+        return node.number == root.number;
     }
 
     private Node parent(Node target) {
