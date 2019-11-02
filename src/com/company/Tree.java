@@ -1,5 +1,9 @@
 package com.company;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 public class Tree {
     public Node root;
 
@@ -90,22 +94,38 @@ public class Tree {
     }
 
     private void setTheTreeNumbers(Node node, int number){
+        int num = number;
         if (node.hasRight()){
-            node.getRight().number = number - 1 ;
-            setTheTreeNumbers(node.getRight(),number-1);
+            num--;
+            node.getRight().number = num ;
+            setTheTreeNumbers(node.getRight(),num);
         }
         if (node.hasLeft()){
-            node.getLeft().number = number - 2 ;
-            setTheTreeNumbers(node.getLeft(),number-2);
+            num--;
+            node.getLeft().number = num;
+            setTheTreeNumbers(node.getLeft(),num);
         }
     }
 
     void incrementNodeCount(Node targetNode) {
         do {
-            trySwap(targetNode);
-            this.codeTheTree(root,"");
-            targetNode.incrementCount();
-            targetNode = parent(root,targetNode);
+            Node parent = parent(root,targetNode);
+            Node finalTargetNode = targetNode;
+            ArrayList<Node> swapable = (ArrayList<Node>) toArray()
+                    .stream()
+                    .filter(node -> finalTargetNode.canSwapWith(node,this::isParent))
+                    .collect(Collectors.toList());
+            swapable.sort((o1, o2) -> o1.number > o2.number ? 1 : 0);
+            if (!swapable.isEmpty()){
+                targetNode.swapWith(swapable.get(0));
+                targetNode = swapable.get(0);
+                this.codeTheTree(root,"");
+            }else {
+                this.codeTheTree(root,"");
+                targetNode.incrementCount();
+                targetNode = parent;
+            }
+
         }while (!isRoot(targetNode));
         root.incrementCount();
     }
@@ -140,14 +160,14 @@ public class Tree {
     Node parent(Node node,Node target){
         Node parent = null;
         if (node.hasLeft()){
-            if (node.getLeft().number == target.number){
+            if (node.getLeft().code == target.code){
                 parent = node;
             }else {
                 parent = parent(node.getLeft(),target);
             }
         }
         if (parent == null && node.hasRight() ){
-            if (node.getRight().number == target.number){
+            if (node.getRight().code == target.code){
                 parent = node;
             }else {
                 parent = parent(node.getRight(),target);
@@ -165,5 +185,13 @@ public class Tree {
             parent = parent(root,parent);
         }
         return false;
+    }
+
+    ArrayList<Node> toArray(){
+        ArrayList<Node> nodes = new ArrayList<>();
+        forEach(root,node -> {
+            nodes.add(node);
+        });
+        return nodes;
     }
 }
