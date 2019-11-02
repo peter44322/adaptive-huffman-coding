@@ -17,37 +17,9 @@ public class AdaptiveHuffman {
     }
 
     public String compress() {
-        compressedText =
-                Arrays.stream(this.text.split(""))
-                .map(c -> {
-                    char character = c.charAt(0);
-                    if (tree.isEmpty()){
-                        tree.append(character);
-                        tree.traverseOrder(tree.root);
-                        System.out.println("character : "+character );
-                        return String.valueOf(shortCodeTable.get(character));
-                    }
-
-                    Node targetNode = tree.get(tree.root,character);
-                    if (targetNode == null) {
-                        Node NYT = tree.getNyt(tree.root);
-                        String result = NYT.code.toString() + shortCodeTable.get(character);
-                        tree.updateWith(character);
-                        tree.traverseOrder(tree.root);
-                        System.out.println("character : "+character);
-                        return result;
-                    }else {
-                        String result = targetNode.code.toString();
-                        tree.updateWith(character);
-                        tree.traverseOrder(tree.root);
-                        System.out.println("character : "+character);
-                        return result;
-                    }
-                })
+        return Arrays.stream(this.text.split(""))
+                .map(this::characterToCode)
                 .collect(Collectors.joining(" "));
-//        tree.traverseOrder(tree.root);
-//        System.out.println(tree.get(tree.root,'A'));
-        return compressedText;
     }
 
     private Hashtable<Character, Binary> generateShortCodeTable() {
@@ -63,6 +35,26 @@ public class AdaptiveHuffman {
                 Math.log(result.size()) / Math.log(2)
         );
         result.forEach((k, v) -> v.setDigitsNumber(digitsNumber));
+        return result;
+    }
+
+    private String characterToCode(String c){
+        char character = c.charAt(0);
+        String result;
+        if (tree.isEmpty()){
+            result =  shortCodeTable.get(character).toString();
+        }else {
+            Node targetNode = tree.get(character);
+            if (targetNode == null) {
+                Node NYT = tree.getNyt();
+                result = NYT.code.toString() + shortCodeTable.get(character);
+            } else {
+                result = targetNode.code.toString();
+            }
+        }
+        tree.updateWith(character);
+        tree.traversePostOrder(tree.root);
+        System.out.println(" character : " + character);
         return result;
     }
 }
