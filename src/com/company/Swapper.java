@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 class Swapper {
     private Tree tree;
+
     Swapper(Tree tree){
         this.tree = tree;
     }
@@ -14,9 +15,8 @@ class Swapper {
         if (swappable !=null){
             swap(targetNode,swappable);
             return swappable;
-        }else {
-            return null;
         }
+        throw new NullPointerException("Cant't Be Swapped");
     }
 
     private Node swappableFor(Node targetNode){

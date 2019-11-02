@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.ArrayList;
 
-public class Tree {
+class Tree {
     Node root;
     private Swapper swapper;
 
@@ -15,7 +15,7 @@ public class Tree {
         return !this.root.hasLeft() && !this.root.hasRight();
     }
 
-    private void append(char character) {
+    private Node append(char character) {
         Node previousNYT = this.getNyt();
         Node targetNode = new Node(character);
         if (previousNYT == null) {
@@ -28,14 +28,12 @@ public class Tree {
         }
         this.codeTheTree(root, "");
         this.setTheTreeNumbers();
-        incrementNodeCount(targetNode);
+        return targetNode;
     }
 
     Node getNyt() {
         final Node[] result = {null};
-        forEach(root, n -> {
-            if (n.isNYT) result[0] = n;
-        });
+        forEach(root, n -> {if (n.isNYT) result[0] = n; });
         return result[0];
     }
 
@@ -49,9 +47,7 @@ public class Tree {
 
     Node get(char character) {
         final Node[] result = {null};
-        forEach(root, n -> {
-            if (n.symbol == character) result[0] = n;
-        });
+        forEach(root, n -> { if (n.symbol == character) result[0] = n; });
         return result[0];
     }
 
@@ -70,51 +66,41 @@ public class Tree {
     }
 
     private void setTheTreeNumbers() {
-        final int[] num = {100};
+        final int[] number = {100};
         forEach(root, n -> {
             if (n.hasRight()) {
-                num[0]--;
-                n.getRight().number = num[0];
+                number[0]--;
+                n.getRight().number = number[0];
             }
             if (n.hasLeft()) {
-                num[0]--;
-                n.getLeft().number = num[0];
+                number[0]--;
+                n.getLeft().number = number[0];
             }
         });
     }
 
     private void incrementNodeCount(Node targetNode) {
         do {
-            Node parent = parent(targetNode);
-            Node swaped = swapper.trySwap(targetNode);
-            this.codeTheTree(root, "");
-            if (swaped != null) {
-                targetNode = swaped;
-            } else {
+            try{
+                targetNode = swapper.trySwap(targetNode);
+            }catch (NullPointerException e){
                 targetNode.incrementCount();
-                targetNode = parent;
+                targetNode = parent(targetNode);
             }
         } while (!isRoot(targetNode));
+        codeTheTree(root, "");
         root.incrementCount();
     }
 
     private void forEach(Node node, ForEach forEach) {
         forEach.execute(node);
-        if (node.hasLeft()) {
-            forEach(node.getLeft(), forEach);
-        }
-        if (node.hasRight()) {
-            forEach(node.getRight(), forEach);
-        }
+        if (node.hasLeft()) forEach(node.getLeft(), forEach);
+        if (node.hasRight()) forEach(node.getRight(), forEach);
     }
 
     void updateWith(char character) {
-        Node targetNode = get(character);
-        if (targetNode == null) {
-            append(character);
-        } else {
-            incrementNodeCount(targetNode);
-        }
+        Node targetNode = get(character) == null ? append(character) : get(character) ;
+        incrementNodeCount(targetNode);
     }
 
     private boolean isRoot(Node node) {
@@ -133,9 +119,7 @@ public class Tree {
     boolean isParent(Node child, Node node) {
         Node parent = parent(child);
         while (parent != null) {
-            if (parent.number == node.number) {
-                return true;
-            }
+            if (parent.number == node.number) return true;
             parent = parent(parent);
         }
         return false;

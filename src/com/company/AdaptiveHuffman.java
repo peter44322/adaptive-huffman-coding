@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.stream.Collectors;
 
-public class AdaptiveHuffman {
+class AdaptiveHuffman {
     private String text = "";
     private Tree tree;
     private Hashtable<Character, Binary> shortCodeTable;
