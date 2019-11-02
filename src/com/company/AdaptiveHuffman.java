@@ -23,13 +23,13 @@ class AdaptiveHuffman {
 
     private Hashtable<Character, Binary> generateShortCodeTable() {
         Hashtable<Character, Binary> result = new Hashtable<>();
-        int counter = 0;
-        for (char i : this.text.toCharArray()) {
-            if (result.get(i) == null) {
-                result.put(i, new Binary(counter));
-                counter++;
+        final int[] counter = {0};
+        Arrays.stream(this.text.split("")).forEach(i ->{
+            if (result.get(i.charAt(0)) == null) {
+                result.put(i.charAt(0), new Binary(counter[0]));
+                counter[0]++;
             }
-        }
+        });
         int digitsNumber = (int) Math.ceil(
                 Math.log(result.size()) / Math.log(2)
         );
@@ -45,8 +45,7 @@ class AdaptiveHuffman {
         }else {
             Node targetNode = tree.get(character);
             if (targetNode == null) {
-                Node NYT = tree.getNyt();
-                result = NYT.code.toString() + shortCodeTable.get(character);
+                result = tree.getNyt().code.toString() + shortCodeTable.get(character);
             } else {
                 result = targetNode.code.toString();
             }
