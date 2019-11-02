@@ -1,29 +1,27 @@
 package com.company;
 
-public class Node{
-    public char symbol = '#';
-    public Binary code = null;
-    public int number = 100;
-    public int count = 0;
+public class Node {
+    char symbol = '#';
+    Binary code = null;
+    int number = 100;
+    int count = 0;
     private Node right = null;
     private Node left = null;
-    public boolean isNYT = false;
-    public boolean lefty ;
+    boolean isNYT = false;
 
 
-    public Node() {
-        //root
+    Node() {
     }
 
-    public Node(Node that){
+    Node(Node that) {
         this.copy(that);
     }
 
-    public Node(boolean isNYT) {
+    Node(boolean isNYT) {
         this.isNYT = isNYT;
     }
 
-    public Node(char symbol) {
+    Node(char symbol) {
         this.symbol = symbol;
         this.count = 0;
     }
@@ -65,14 +63,16 @@ public class Node{
     void incrementCount() {
         this.count++;
     }
-    void copy(Node that){
+
+    void copy(Node that) {
         this.symbol = that.symbol;
         this.count = that.count;
         this.left = that.getLeft();
         this.right = that.getRight();
         this.isNYT = that.isNYT;
     }
-    public void detach() {
+
+    void detach() {
         this.right = null;
         this.left = null;
     }

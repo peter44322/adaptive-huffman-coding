@@ -1,11 +1,9 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.stream.Collectors;
 
 public class Tree {
-    public Node root;
+    Node root;
     private Swapper swapper;
 
     Tree() {
@@ -100,7 +98,7 @@ public class Tree {
         root.incrementCount();
     }
 
-    void forEach(Node node, ForEach forEach) {
+    private void forEach(Node node, ForEach forEach) {
         forEach.execute(node);
         if (node.hasLeft()) {
             forEach(node.getLeft(), forEach);
@@ -110,7 +108,7 @@ public class Tree {
         }
     }
 
-    public void updateWith(char character) {
+    void updateWith(char character) {
         Node targetNode = get(character);
         if (targetNode == null) {
             append(character);
@@ -119,7 +117,7 @@ public class Tree {
         }
     }
 
-    boolean isRoot(Node node) {
+    private boolean isRoot(Node node) {
         return node.code == root.code;
     }
 
@@ -145,9 +143,7 @@ public class Tree {
 
     ArrayList<Node> toArray() {
         ArrayList<Node> nodes = new ArrayList<>();
-        forEach(root, node -> {
-            nodes.add(node);
-        });
+        forEach(root, nodes::add);
         return nodes;
     }
 }

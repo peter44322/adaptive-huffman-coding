@@ -7,8 +7,7 @@ import java.util.stream.Collectors;
 public class AdaptiveHuffman {
     private String text = "";
     private Tree tree;
-    public Hashtable<Character, Binary> shortCodeTable;
-    public String compressedText;
+    private Hashtable<Character, Binary> shortCodeTable;
 
     AdaptiveHuffman(String text) {
         this.text = text;
@@ -16,7 +15,7 @@ public class AdaptiveHuffman {
         this.shortCodeTable = this.generateShortCodeTable();
     }
 
-    public String compress() {
+    String compress() {
         return Arrays.stream(this.text.split(""))
                 .map(this::characterToCode)
                 .collect(Collectors.joining(" "));

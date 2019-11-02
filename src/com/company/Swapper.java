@@ -3,33 +3,32 @@ package com.company;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class Swapper {
+class Swapper {
     private Tree tree;
     Swapper(Tree tree){
         this.tree = tree;
     }
 
-    public Node trySwap(Node targetNode) {
-        Node swapable = swappableFor(targetNode);
-        if (swapable !=null){
-            swap(targetNode,swapable);
-            return swapable;
+    Node trySwap(Node targetNode) {
+        Node swappable = swappableFor(targetNode);
+        if (swappable !=null){
+            swap(targetNode,swappable);
+            return swappable;
         }else {
             return null;
         }
     }
 
     private Node swappableFor(Node targetNode){
-        Node finalTargetNode = targetNode;
-        ArrayList<Node> swapable = (ArrayList<Node>) tree.toArray()
+        ArrayList<Node> swappable = (ArrayList<Node>) tree.toArray()
                 .stream()
-                .filter(node -> canBeSwapped(finalTargetNode,node))
+                .filter(node -> canBeSwapped(targetNode,node))
                 .collect(Collectors.toList());
-        swapable.sort((o1, o2) -> o1.number > o2.number ? 1 : 0);
-        if (swapable.isEmpty()){
+        swappable.sort((o1, o2) -> o1.number > o2.number ? 1 : 0);
+        if (swappable.isEmpty()){
             return null;
         }
-        return swapable.get(0);
+        return swappable.get(0);
     }
 
     private boolean canBeSwapped(Node node,Node otherNode){
