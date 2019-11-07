@@ -1,7 +1,7 @@
 package com.company;
 
 public class Node {
-    char symbol = '#';
+    char symbol = '*';
     Binary code = null;
     int number = 100;
     int count = 0;
@@ -56,7 +56,6 @@ public class Node {
     }
 
     void clear() {
-        this.symbol = '*';
         this.isNYT = false;
     }
 
@@ -75,5 +74,9 @@ public class Node {
     void detach() {
         this.right = null;
         this.left = null;
+    }
+
+    public boolean hasInformation() {
+        return this.symbol != '*' || this.isNYT;
     }
 }

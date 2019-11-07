@@ -7,42 +7,70 @@ import java.util.stream.Collectors;
 class AdaptiveHuffman {
     private String text = "";
     private Tree tree;
-    private Hashtable<Character, Binary> shortCodeTable;
+    private String compressed = "";
+    private ShortCodeTable shortCodeTable;
 
     AdaptiveHuffman(String text) {
         this.text = text;
         this.tree = new Tree();
-        this.shortCodeTable = this.generateShortCodeTable();
+        this.shortCodeTable = new ShortCodeTable(text);
+    }
+
+    AdaptiveHuffman(String decompressed, String possibleCharacters) {
+        this.compressed = decompressed;
+        this.tree = new Tree();
+        this.shortCodeTable = new ShortCodeTable(possibleCharacters);
     }
 
     String compress() {
-        return Arrays.stream(this.text.split(""))
+        this.compressed = Arrays.stream(this.text.split(""))
                 .map(this::characterToCode)
-                .collect(Collectors.joining(" "));
+                .collect(Collectors.joining(""));
+        return this.compressed;
     }
 
-    private Hashtable<Character, Binary> generateShortCodeTable() {
-        Hashtable<Character, Binary> result = new Hashtable<>();
-        final int[] counter = {0};
-        Arrays.stream(this.text.split("")).forEach(i ->{
-            if (result.get(i.charAt(0)) == null) {
-                result.put(i.charAt(0), new Binary(counter[0]));
-                counter[0]++;
+    String decompress() {
+        this.text = "";
+        tree = new Tree();
+        Character character;
+        boolean prevCodeIsNyt = false;
+        Binary sequence;
+        int seqLength, i = 0;
+        while (i < this.compressed.length()) {
+            if (i == 0 || prevCodeIsNyt) {
+                seqLength = shortCodeTable.getDigitsNumber();
+                sequence = new Binary(compressed.substring(i, i + seqLength));
+                character = shortCodeTable.getByBinary(sequence);
+                prevCodeIsNyt = false;
+            } else {
+                seqLength = 0;
+                Node node = null;
+                while (node == null) {
+                    seqLength++;
+                    sequence = new Binary(compressed.substring(i, i + seqLength));
+                    node = tree.getByBinary(sequence);
+                    if (node != null && !node.hasInformation()) {
+                        node = null;
+                    }
+                }
+                character = node.isNYT ? null : node.symbol;
+                prevCodeIsNyt = node.isNYT;
             }
-        });
-        int digitsNumber = (int) Math.ceil(
-                Math.log(result.size()) / Math.log(2)
-        );
-        result.forEach((k, v) -> v.setDigitsNumber(digitsNumber));
-        return result;
+            tree.updateWith(character);
+            this.text += character == null ? "" : character;
+            i += seqLength;
+        }
+
+        return this.text;
     }
 
-    private String characterToCode(String c){
+
+    private String characterToCode(String c) {
         char character = c.charAt(0);
         String result;
-        if (tree.isEmpty()){
-            result =  shortCodeTable.get(character).toString();
-        }else {
+        if (tree.isEmpty()) {
+            result = shortCodeTable.get(character);
+        } else {
             Node targetNode = tree.get(character);
             if (targetNode == null) {
                 result = tree.getNyt().code.toString() + shortCodeTable.get(character);
@@ -51,8 +79,6 @@ class AdaptiveHuffman {
             }
         }
         tree.updateWith(character);
-        tree.traversePostOrder(tree.root);
-        System.out.println(" character : " + character);
         return result;
     }
 }

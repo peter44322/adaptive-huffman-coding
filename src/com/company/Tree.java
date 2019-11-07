@@ -1,6 +1,8 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 class Tree {
     Node root;
@@ -98,9 +100,11 @@ class Tree {
         if (node.hasRight()) forEach(node.getRight(), forEach);
     }
 
-    void updateWith(char character) {
-        Node targetNode = get(character) == null ? append(character) : get(character) ;
-        incrementNodeCount(targetNode);
+    void updateWith(Character character) {
+        if (character != null){
+            Node targetNode = get(character) == null ? append(character) : get(character) ;
+            incrementNodeCount(targetNode);
+        }
     }
 
     private boolean isRoot(Node node) {
@@ -129,5 +133,12 @@ class Tree {
         ArrayList<Node> nodes = new ArrayList<>();
         forEach(root, nodes::add);
         return nodes;
+    }
+
+    public Node getByBinary(Binary code) {
+        codeTheTree(root,"");
+        final Node[] result = {null};
+        forEach(root, n -> {if (n.code!=null && n.code.equals(code)) result[0] = n; });
+        return result[0];
     }
 }

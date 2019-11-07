@@ -1,6 +1,6 @@
 package com.company;
 
-public class Binary {
+public class Binary{
     private String value;
 
     Binary(String value){
@@ -18,8 +18,20 @@ public class Binary {
         }
     }
 
+    int getDigitsNumber(){
+        if (this.value == null){
+            return 0;
+        }
+        return this.value.length();
+    }
+
     @Override
     public String toString() {
         return this.value;
     }
+
+    public boolean equals(Binary obj) {
+        return this.value.equals(obj.value);
+    }
+
 }
