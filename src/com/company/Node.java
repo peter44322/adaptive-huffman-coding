@@ -76,7 +76,7 @@ public class Node {
         this.left = null;
     }
 
-    public boolean hasInformation() {
+    boolean hasInformation() {
         return this.symbol != '*' || this.isNYT;
     }
 }

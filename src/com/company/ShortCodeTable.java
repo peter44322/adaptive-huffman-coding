@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ShortCodeTable {
+class ShortCodeTable {
     private Hashtable<Character, Binary> table;
 
     ShortCodeTable(String possibleCharacters){
