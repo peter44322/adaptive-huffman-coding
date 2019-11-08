@@ -9,7 +9,7 @@ public class Main {
 
         String compressed = adaptiveHuffman.compress();
 
-        System.out.println("");
+        System.out.println(adaptiveHuffman.getPossibleCharacters());
         System.out.println(compressed);
         System.out.println(adaptiveHuffman.decompress());
 

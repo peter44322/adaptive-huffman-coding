@@ -3,6 +3,7 @@ package com.company;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ShortCodeTable {
     private Hashtable<Character, Binary> table;
@@ -43,4 +44,9 @@ public class ShortCodeTable {
         }
         throw new NullPointerException("Binary Not found");
     }
+
+    String getPossibleCharacters(){
+        return table.keySet().stream().map(String::valueOf).collect(Collectors.joining(""));
+    }
+
 }

@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.stream.Collectors;
 
 class AdaptiveHuffman {
@@ -80,5 +79,9 @@ class AdaptiveHuffman {
         }
         tree.updateWith(character);
         return result;
+    }
+
+    String getPossibleCharacters(){
+        return shortCodeTable.getPossibleCharacters();
     }
 }
