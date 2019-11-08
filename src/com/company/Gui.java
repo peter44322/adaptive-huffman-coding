@@ -23,7 +23,8 @@ public class Gui extends Application  {
     FileHandler file=new FileHandler();
 
     public Gui(String[] args) {
-        launch(args);
+        //(args);
+        launch();
     }
 
     @Override
@@ -38,16 +39,14 @@ public class Gui extends Application  {
             public void handle(ActionEvent event) {
                 fileChooser=new FileChooser();
                 File f=fileChooser.showOpenDialog(primaryStage);
-
-
-
-
                 String data=file.readFile(f.getAbsolutePath());
-                file.writeFile("compressed.txt",data);
 
-                String[] result = data.split("-");
+                AdaptiveHuffman adaptiveHuffman = new AdaptiveHuffman(data);
+                String compressed = adaptiveHuffman.compress();
+                file.writeFile("compressed.txt",compressed+"-"+adaptiveHuffman.getPossibleCharacters());
 
-                compressLabel.setText(result[0]);
+
+                compressLabel.setText(compressed);
             }
         });
 
@@ -56,7 +55,13 @@ public class Gui extends Application  {
             public void handle(ActionEvent event) {
                 fileChooser=new FileChooser();
                 File f=fileChooser.showOpenDialog(primaryStage);
-                //deCompressLabel.setText(ReadFile(f.getAbsolutePath()));
+                String data=file.readFile(f.getAbsolutePath());
+                String[] result = data.split("-");
+                AdaptiveHuffman adaptiveHuffman = new AdaptiveHuffman(result[0],result[1]);
+                String original=adaptiveHuffman.decompress();
+                file.writeFile("original.txt",original);
+
+                deCompressLabel.setText(original);
             }
         });
 
